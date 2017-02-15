@@ -1,8 +1,9 @@
 import * as React from "react";
 import { Link } from "react-router";
 
+
 class App extends React.Component<{}, {}> {
-  render() {
+  public render() {
     return (
       <div>
         <ul>
