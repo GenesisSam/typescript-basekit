@@ -72,7 +72,14 @@ export default class Hello extends React.Component<{}, IHelloState> {
 
       const userInfoRef = firebase.database().ref().child("users").child(uid);
       userInfoRef.on("value", (snap: firebase.database.DataSnapshot) => {
-        console.log(snap.val());
+        const data = snap.val();
+        this.setState({
+          currentUserInfo: {
+            displayName: data.displayName,
+            email: data.email,
+            photoURL: data.photoURL,
+          } as firebase.UserInfo,
+        });
       });
 
     }).catch((err: firebase.FirebaseError) => {

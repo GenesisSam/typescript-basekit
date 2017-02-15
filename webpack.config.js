@@ -7,9 +7,13 @@ module.exports = {
   resolve: {
     extensions: ["", ".webpack.js", ".web.js", ".ts", ".tsx", ".js"]
   },
+  devServer: {
+    inline: true,
+    historyApiFallback: true
+  },
   module: {
     loaders: [{
-        test: /\.tsx$/, loader: "awesome-typescript-loader" 
+        test: /\.tsx$/, loader: "awesome-typescript-loader"
       }],
     preLoaders: [
       { test: /\.js$/, loader: "source-map-loader" }
