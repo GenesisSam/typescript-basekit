@@ -9,7 +9,7 @@ class App extends React.Component<{}, {}> {
         <ul>
           <li><Link to="home">Home</Link></li>
           <li><Link to="wallet">Wallet</Link></li>
-          <li><Link to="articles">Articles</Link></li>
+          <li><Link to="login">Login</Link></li>
         </ul>
         {this.props.children}
       </div>
