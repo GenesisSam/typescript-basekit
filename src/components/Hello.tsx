@@ -1,5 +1,7 @@
 import * as React from "react";
 
+const styles = require("./Hello.css");
+
 export default class Hello extends React.Component<{}, {}> {
   public componentDidMount() {
     console.log("componentDidMount");
@@ -7,7 +9,7 @@ export default class Hello extends React.Component<{}, {}> {
 
   public render() {
     return (
-      <h1>HELLO WORLD!!</h1>
+      <h1 className={styles.container}>HELLO WORLD!!</h1>
     );
   }
 }

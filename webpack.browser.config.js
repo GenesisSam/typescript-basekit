@@ -4,9 +4,9 @@ const autoprefixer = require('autoprefixer');
 module.exports = {
   entry: './src/App.tsx',
   outpus: {
-    filename: './dist/bundle.js'
+    filename: 'bundleBrowser.js',
+    path: __dirname + '/dist'
   },
-  devtool: 'source-map',
   resolve: {
     extensions: ['', '.webpack.js', '.web.js', '.ts', '.tsx', '.js'],
     modulesDirectories: ['node_modules']
@@ -38,9 +38,9 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development'),
+      'process.env.NODE_ENV': JSON.stringify('production')
     }),
+    new webpack.optimize.OccurrenceOrderPlugin,
     new webpack.NoErrorsPlugin(),
-    new webpack.HotModuleReplacementPlugin(),
   ],
 };
