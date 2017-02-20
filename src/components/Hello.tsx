@@ -1,27 +1,38 @@
 import * as React from "react";
+import { connect } from "react-redux";
+import { Dispatch } from "redux";
+import { userSignIn, userSignOut } from "../actions";
 import * as firebase from "firebase";
+import { IUserState } from "../reducer";
 
+interface IHelloProps {
+  dispatch: Dispatch<any>;
+  currentUser: IUserState;
+}
 
 interface IHelloState {
   userEmail: string;
   userPassword: string;
-  currentUserInfo: firebase.UserInfo;
 }
 
-export default class Hello extends React.Component<{}, IHelloState> {
-  public constructor(props: any) {
+function mapStateToProps(state: any) {
+  return {
+    currentUser: state.reduerUser,
+  };
+}
+
+class Hello extends React.Component<IHelloProps, IHelloState> {
+  public constructor(props: IHelloProps) {
     super(props);
-    const user = firebase.auth().currentUser;
 
     this.state = {
       userEmail: "",
       userPassword: "",
-      currentUserInfo: user,
     };
   }
 
   public render() {
-    const { currentUserInfo } = this.state;
+    const { currentUser } = this.props;
 
     let userStateForm = (
       <form>
@@ -33,12 +44,12 @@ export default class Hello extends React.Component<{}, IHelloState> {
       </form>
     );
 
-    if (currentUserInfo) {
+    if (currentUser && currentUser.currentUser && currentUser.currentUser.email) {
       userStateForm = (
         <div>
-          Email: {currentUserInfo.email}<br/>
-          Name: {currentUserInfo.displayName}<br/>
-          UID: {currentUserInfo.photoURL} <br/>
+          Email: {currentUser.currentUser.email}<br/>
+          Name: {currentUser.currentUser.displayName}<br/>
+          UID: {currentUser.currentUser.photoURL} <br/>
           <button onClick={this.handleLogout.bind(this)}>Logout</button>
         </div>
       );
@@ -53,13 +64,8 @@ export default class Hello extends React.Component<{}, IHelloState> {
   }
 
   private handleLogout() {
-    firebase.auth().signOut();
-    this.setState({
-      userEmail: "",
-      userPassword: "",
-      currentUserInfo: null,
-    });
-    alert("Logout!!");
+    const { dispatch } = this.props;
+    dispatch(userSignOut(dispatch));
   }
 
   private handleEmailText(e: any) {
@@ -76,63 +82,19 @@ export default class Hello extends React.Component<{}, IHelloState> {
 
   private handleOnSubmit(e: any) {
     e.preventDefault();
+    const { dispatch } = this.props;
     const { userEmail, userPassword } = this.state;
-    // const credential = firebase.auth.EmailAuthProvider.credential(userEmail, userPassword);
-    firebase.auth().signInWithEmailAndPassword(userEmail, userPassword).then((res) => {
-      const uid = res.uid;
 
-      const userInfoRef = firebase.database().ref().child("users").child(uid);
-      userInfoRef.on("value", (snap: firebase.database.DataSnapshot) => {
-        const data = snap.val();
-        this.setState({
-          currentUserInfo: {
-            displayName: data.displayName,
-            email: data.email,
-            photoURL: data.photoURL,
-          } as firebase.UserInfo,
-        });
-      });
-
-    }).catch((err: firebase.FirebaseError) => {
-      const errorCode = err.code;
-      const errorMSG = err.message;
-
-      if (errorCode === "auth/wrong-password") {
-        alert("Wrong password");
-      } else {
-        alert(errorMSG);
-      }
-
-      console.log(err);
-    });
+    dispatch(userSignIn(userEmail, userPassword));
   }
 
   private handleOnSubmitSignUp(e: any) {
     e.preventDefault();
     const { userEmail, userPassword } = this.state;
-    // const credential = firebase.auth.EmailAuthProvider.credential(userEmail, userPassword);
-    firebase.auth().createUserWithEmailAndPassword(userEmail, userPassword).then((res) => {
-      const uid = res.uid;
-      res.providerData.forEach((profile: firebase.UserInfo) => {
-        firebase.database().ref().child("users").child(uid).set({
-          displayName: profile.displayName ? profile.displayName : "",
-          email: profile.email,
-          photoURL: profile.photoURL ? profile.photoURL : "",
-        });
-        this.setState({
-          currentUserInfo: profile,
-        });
-      });
-    }).catch((err: firebase.FirebaseError) => {
-      const errorCode = err.code;
-      const errorMSG = err.message;
-
-      if (errorCode === "auth/weak-password") {
-        alert("Weak password");
-      } else {
-        alert(errorMSG);
-      }
-      console.log(err);
-    });
   }
+
 }
+
+
+export default connect(mapStateToProps)(Hello);
+
