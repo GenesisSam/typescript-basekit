@@ -38,7 +38,8 @@ export default class Hello extends React.Component<{}, IHelloState> {
         <div>
           Email: {currentUserInfo.email}<br/>
           Name: {currentUserInfo.displayName}<br/>
-          UID: {currentUserInfo.photoURL}
+          UID: {currentUserInfo.photoURL} <br/>
+          <button onClick={this.handleLogout.bind(this)}>Logout</button>
         </div>
       );
     }
@@ -49,6 +50,16 @@ export default class Hello extends React.Component<{}, IHelloState> {
         {userStateForm}
       </div>
     );
+  }
+
+  private handleLogout() {
+    firebase.auth().signOut();
+    this.setState({
+      userEmail: "",
+      userPassword: "",
+      currentUserInfo: null,
+    });
+    alert("Logout!!");
   }
 
   private handleEmailText(e: any) {
