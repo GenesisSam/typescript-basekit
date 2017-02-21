@@ -1,9 +1,10 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { Dispatch } from "redux";
-import { userSignIn, userSignOut } from "../actions";
 import * as firebase from "firebase";
-import { IUserState } from "../reducer";
+
+import { userSignIn, userSignOut, userSignUp, userAlreadySignIn } from "./actions";
+import { IUserState, IUserInformation } from "./reducer";
 
 interface IHelloProps {
   dispatch: Dispatch<any>;
@@ -21,7 +22,7 @@ function mapStateToProps(state: any) {
   };
 }
 
-class Hello extends React.Component<IHelloProps, IHelloState> {
+class LoginComponent extends React.Component<IHelloProps, IHelloState> {
   public constructor(props: IHelloProps) {
     super(props);
 
@@ -29,6 +30,13 @@ class Hello extends React.Component<IHelloProps, IHelloState> {
       userEmail: "",
       userPassword: "",
     };
+  }
+
+  public componentDidMount() {
+    firebase.auth().onAuthStateChanged((user: any) => {
+      const { dispatch } = this.props;
+      dispatch(userAlreadySignIn());
+    });
   }
 
   public render() {
@@ -49,7 +57,7 @@ class Hello extends React.Component<IHelloProps, IHelloState> {
         <div>
           Email: {currentUser.currentUser.email}<br/>
           Name: {currentUser.currentUser.displayName}<br/>
-          UID: {currentUser.currentUser.photoURL} <br/>
+          PhotoURL: {currentUser.currentUser.photoURL} <br/>
           <button onClick={this.handleLogout.bind(this)}>Logout</button>
         </div>
       );
@@ -65,7 +73,7 @@ class Hello extends React.Component<IHelloProps, IHelloState> {
 
   private handleLogout() {
     const { dispatch } = this.props;
-    dispatch(userSignOut(dispatch));
+    dispatch(userSignOut());
   }
 
   private handleEmailText(e: any) {
@@ -90,11 +98,14 @@ class Hello extends React.Component<IHelloProps, IHelloState> {
 
   private handleOnSubmitSignUp(e: any) {
     e.preventDefault();
+    const { dispatch } = this.props;
     const { userEmail, userPassword } = this.state;
+
+    dispatch(userSignUp(userEmail, userPassword));
   }
 
 }
 
 
-export default connect(mapStateToProps)(Hello);
+export default connect(mapStateToProps)(LoginComponent);
 

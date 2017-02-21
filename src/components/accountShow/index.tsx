@@ -1,36 +1,29 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import * as firebase from "firebase";
 import { Card, CardActions, CardHeader, CardText, CardTitle } from "material-ui/Card";
 import FlatButton from "material-ui/FlatButton";
-import { IWalletData, IAccounts } from "../../types";
 
-interface IAccountsShowState {
-  isLoading: boolean;
-  isFailed: boolean;
-  accountState: IAccounts;
-}
+ interface IAccountShowProps {
 
-export default class AccountShow extends React.Component<{}, IAccountsShowState> {
+ }
 
-  public constructor(props: any) {
+
+
+class AccountShow extends React.Component<IAccountShowProps, {}> {
+
+  public constructor(props: IAccountShowProps) {
     super(props);
 
-    this.state = {
-      isLoading: false,
-      isFailed: false,
-      accountState: null,
-    }
   }
 
   public componentDidMount() {
-    this.handleGetAccounts();
+    // this.handleGetAccounts();
   }
 
   public render() {
-    const { accountState } = this.state;
-
     let rows = null;
-    if (accountState) {
+    /*if (accountState) {
       rows = accountState.datas.map((item: IWalletData, index: number) => {
         return (
           <Card key={`account_item_key_${index}`}>
@@ -50,7 +43,7 @@ export default class AccountShow extends React.Component<{}, IAccountsShowState>
           </Card>
         );
       });
-    }
+    }*/
 
     return (
       <div>
@@ -77,3 +70,5 @@ export default class AccountShow extends React.Component<{}, IAccountsShowState>
     // const { accountState } = this.state;
   }
 }
+
+export default connect()(AccountShow);

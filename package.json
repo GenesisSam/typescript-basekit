@@ -35,10 +35,14 @@
     "webpack-dev-server": "^1.16.2"
   },
   "devDependencies": {
+    "@types/jest": "^18.1.1",
     "@types/material-ui": "^0.16.51",
     "@types/react-tap-event-plugin": "0.0.30",
     "awesome-typescript-loader": "^3.0.4-rc.2",
+    "css-loader": "^0.26.1",
+    "jest": "^19.0.0",
     "source-map-loader": "^0.1.6",
+    "style-loader": "^0.13.1",
     "typescript": "^2.1.6"
   },
   "description": "Start kit of Typescript, React, Redux, Webpack"

@@ -1,15 +1,17 @@
 import { ACTION_TYPES } from "./actions";
 
+export interface IUserInformation {
+  displayName: string;
+  email: string;
+  photoURL: string;
+}
+
 export interface IUserState {
   meta: {
     isLoading: boolean;
     isDone: boolean;
   };
-  currentUser: {
-    displayName: string;
-    email: string;
-    photoURL: string;
-  };
+  currentUser: IUserInformation;
 }
 
 const initialUserState = {
@@ -26,6 +28,7 @@ const initialUserState = {
 
 export default function reducerUser(state = initialUserState, action: any) {
   switch (action.type) {
+    case ACTION_TYPES.FIREBASE_IS_SIGN_IN:
     case ACTION_TYPES.FIREBASE_SIGN_IN:
       return Object.assign({}, state, {
         currentUser: action.payload,

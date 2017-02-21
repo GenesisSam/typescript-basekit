@@ -14,6 +14,10 @@ module.exports = {
   module: {
     loaders: [{
         test: /\.tsx$/, loader: "awesome-typescript-loader"
+      },
+      {
+        test: /\.css$/,
+        loader: 'style!css-loader?modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]'
       }],
     preLoaders: [
       { test: /\.js$/, loader: "source-map-loader" }
